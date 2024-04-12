@@ -1,0 +1,58 @@
+<ul class="space-y-10 w-full">
+  <% @supports.each do |request| %>
+    <li class="space-y-4 border border-gray-300 rounded px-4 py-2">
+      <h1 class="text-xl font-bold">
+        On <%= request.created_at.to_formatted_s(:long) %> <code><%= request.email %></code> writes:
+      </h1>
+      <p class="px-10">
+        <blockquote class="px-10 space-y-4">
+          <h2 class="font-bold text-base"><%= request.subject %></h2>
+          <span><%= request.body %></span>
+        </blockquote>
+      </p>
+      <% if request.order %>
+        <h3 class="text-sm font-bold">Recent Order</h3>
+        <dl>
+          <dt class="font-medium">Name</dt>
+          <dd class="ml-4"><%= request.order.name %></dd>
+          <dt class="font-medium">Email</dt>
+          <dd class="ml-4"><%= request.order.email %></dd>
+          <dt class="font-medium">Address</dt>
+          <dd class="ml-4"><%= request.order.address %></dd>
+          <dt class="font-medium">Pay type</dt>
+          <dd class="ml-4"><%= request.order.pay_type %></dd>
+          <dt class="font-medium">Line Item</dt>
+          <dd class="ml-4">
+            <ul>
+              <% request.order.line_items.each do |item| %>
+                <li><%= item.product.title %> (<%= item.product.price %>)</li>
+              <% end %>
+              
+            </ul>
+          </dd>
+        </dl>
+      <% else %>
+        <h3 class="flex items-center px-4 py-2 bg-yellow-100 border border-gray-600 text-gray-600 rounded text-sm font-bold justify-center">No associated order</h3>
+      <% end %>
+      <% if request.response.blank? %>
+        <%= form_with model: request,local: true, class: 'depot_form space-y-5' do |form| %>
+          <div class="field">
+            <%= form.label :response, 'Write Response' %>
+            <%= form.rich_text_area :response, id: :support_request_response %>
+          </div>
+          <div class="actions">
+            <%= form.submit 'Send Response', class: 'bg-green-100 font-bold px-4 py-2 rounded border border-green-900 block w-full cursor-pointer' %>
+          </div>
+        <% end %>
+      <% else %>
+        <h4 class="text-base font-bold">Our Response:</h4>
+        <p>
+          <blockquote>
+            <%= request.response %>
+          </blockquote>
+        </p>
+      <% end %>
+      
+    </li>
+  <% end %>
+</ul>

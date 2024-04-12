@@ -1,0 +1,14 @@
+<div class="w-full px-10">
+  <%= render 'notice' %>
+  <h1 class="border-b-2 text-xl font-bold pb-2 mb-6 "><%= t('.title_html') %></h1>
+  <%= turbo_stream_from "products" %>
+  <ul>
+    <% cache @products do %>
+      <% @products.each do |product| %>
+        <% cache product do %>
+          <%= render partial: 'product', object: product %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

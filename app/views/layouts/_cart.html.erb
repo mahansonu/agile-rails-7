@@ -1,0 +1,7 @@
+<% if cart && cart.line_items.any? %>
+  <div class="bg-white rounded-lg p-2" id="cart">
+    <%= render cart %>
+  </div>
+<% else %>
+  <div id="cart"></div>
+<% end %>
